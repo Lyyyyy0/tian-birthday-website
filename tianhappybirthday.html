@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tian Happy Birthday</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        #message {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            visibility: hidden;
+            position: absolute;
+            top: 10%; /* 調整文字位置 */
+            width: 90%;
+        }
+
+        #sub-message {
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+            visibility: hidden;
+            position: absolute;
+            top: 50%; /* 調整下方文字位置 */
+            width: 90%;
+            white-space: pre-wrap; /* 保證換行顯示 */
+        }
+
+        @keyframes explosion {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .firework-explosion {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: explosion 1.5s ease-out;
+        }
+
+        #fireworks-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 1.5rem;
+            color: white;
+            background-color: blue;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkblue;
+        }
+
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: popIn 0.5s forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="message"></div>
+    <div id="sub-message"></div>
+    <button id="button">請點下去</button>
+    <div id="fireworks-container"></div>
+
+    <script>
+        const button = document.getElementById('button');
+        const message = document.getElementById('message');
+        const subMessage = document.getElementById('sub-message');
+        const fireworksContainer = document.getElementById('fireworks-container');
+
+        // 四種顏色
+        const colors = ['red', 'blue', 'green', 'yellow'];
+
+        function createFireworkExplosion() {
+            const fireworkExplosionCount = 30; // 每次創建更多煙火顆粒
+
+            for (let i = 0; i < fireworkExplosionCount; i++) {
+                const fireworkExplosion = document.createElement('div');
+                fireworkExplosion.className = 'firework-explosion';
+
+                // 隨機顏色和方向
+                const angle = Math.random() * 360;
+                const distance = Math.random() * 150 + 50; // 隨機距離，增加煙火的範圍
+
+                const leftPosition = `calc(50% + ${distance * Math.cos(angle * Math.PI / 180)}px)`;
+                const topPosition = `calc(50% + ${distance * Math.sin(angle * Math.PI / 180)}px)`;
+
+                fireworkExplosion.style.left = leftPosition;
+                fireworkExplosion.style.top = topPosition;
+                fireworkExplosion.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                fireworkExplosion.style.animationDuration = '1.5s';
+                fireworksContainer.appendChild(fireworkExplosion);
+
+                setTimeout(() => {
+                    fireworkExplosion.remove();
+                }, 1500);
+            }
+        }
+
+        function showMessage(text, element) {
+            element.innerHTML = ''; // 清空訊息容器
+            const lines = text.split('\n'); // 根據換行分割訊息為多行
+            lines.forEach((line, index) => {
+                const span = document.createElement('span');
+                span.textContent = line;
+                span.className = 'letter';
+                span.style.animationDelay = `${index * 0.5}s`;
+                element.appendChild(span);
+                element.appendChild(document.createElement('br')); // 添加換行
+            });
+            element.style.visibility = 'visible';
+        }
+
+        button.addEventListener('click', () => {
+            button.style.display = 'none';
+            showMessage('Tian NN HAPPY BIRTHDAY!!!', message);
+            showMessage('祝你20歲快樂喔！\n希望我買這個沒有重複到\n如果不小心有就家裡放一個\n租屋處放一個\n哈哈哈哈哈\nBY 40', subMessage);
+
+            setInterval(createFireworkExplosion, 700); // 每700毫秒產生煙火爆炸
+        });
+    </script>
+</body>
+</html>
